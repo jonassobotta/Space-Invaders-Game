@@ -14,6 +14,7 @@ uses
 
 type
   TFormMain = class(TForm)
+  procedure Initialisierung;
   private
     { Private declarations }
   public
@@ -23,7 +24,15 @@ type
 var
   FormMain: TFormMain;
 
+  iSpeed : integer;
+
 implementation
+
+//Hier werden Variablen und Objekte initialisert, sofern erforderlich
+procedure TFormMain.Initialisierung;
+begin
+  iSpeed := 5;
+end;
 
 {$R *.fmx}
 
