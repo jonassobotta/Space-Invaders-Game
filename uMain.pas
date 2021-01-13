@@ -1,6 +1,8 @@
-//Hauptfenster mit dem eigentlichen Spiel
-//Main Unit, verwaltet alle anderen Units
-//
+//Space Invader Spiel
+//Jonas Sobotta
+//Maximilian Hauzel
+//Leonardo Wafzig
+//John Roppelt
 unit uMain;
 
 interface
@@ -22,8 +24,6 @@ var
   FormMain: TFormMain;
 
 implementation
-
-uses uSpieler, uAliens, uLaser, uEinstellungen, uMenu; //Andere Units einbinden und deren VAriablen zugängig machen
 
 {$R *.fmx}
 
