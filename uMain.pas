@@ -1,40 +1,72 @@
-//Space Invader Spiel
-//Jonas Sobotta
-//Maximilian Hauzel
-//Leonardo Wafzig
-//John Roppelt
 unit uMain;
 
 interface
 
 uses
-  System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
-  FMX.Controls.Presentation, FMX.StdCtrls;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
+  Vcl.StdCtrls, Vcl.Imaging.pngimage, uSpieler;
 
 type
-  TFormMain = class(TForm)
-  procedure Initialisierung;
+  TfrmMain = class(TForm)
+    MainMenu: TPanel;
+    lblTitel: TLabel;
+    imgMMHintergrund: TImage;
+    lblCredits: TLabel;
+    imgStarten: TImage;
+    imgEinstellungen: TImage;
+    imgTutorial: TImage;
+    imgEnde: TImage;
+    imgHintergrund: TImage;
+
+    procedure INIT;
+    procedure imgStartenClick(Sender: TObject);
+    procedure imgEinstellungenClick(Sender: TObject);
+    procedure imgTutorialClick(Sender: TObject);
+    procedure imgEndeClick(Sender: TObject);
   private
-    { Private declarations }
+    { Private-Deklarationen }
   public
-    { Public declarations }
+    { Public-Deklarationen }
   end;
 
 var
-  FormMain: TFormMain;
-
-  iSpeed : integer;
+  frmMain : TfrmMain;
+  Spieler : TSpieler;
 
 implementation
 
-//Hier werden Variablen und Objekte initialisert, sofern erforderlich
-procedure TFormMain.Initialisierung;
+{$R *.dfm}
+
+//Hauptmenü Prcedures
+procedure TfrmMain.imgEinstellungenClick(Sender: TObject);
 begin
-  iSpeed := 5;
+showmessage('Kranke Sachen einstellen');
 end;
 
-{$R *.fmx}
+procedure TfrmMain.imgEndeClick(Sender: TObject);
+begin
+IF MessageDlg ('Schon aufgeben, oder was???',mtConfirmation,[mbYes,mbNo,mbCancel],0)=mrYes
+  THEN Close;
+end;
 
+procedure TfrmMain.imgStartenClick(Sender: TObject);
+begin
+showmessage('Was geht ab');
+MainMenu.Visible := false;
+INIT;
+end;
+
+procedure TfrmMain.imgTutorialClick(Sender: TObject);
+begin
+showmessage('Wir zeigen euch wies geht');
+end;
+
+//Initalisierung
+procedure TfrmMain.INIT;
+begin
+  Spieler := TSpieler.Create;
+  Spieler.draw(frmMain);
+end;
 
 end.
