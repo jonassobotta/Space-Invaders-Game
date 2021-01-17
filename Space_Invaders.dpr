@@ -3,7 +3,8 @@ program Space_Invaders;
 uses
   Vcl.Forms,
   uMain in 'uMain.pas' {frmMain},
-  uSpieler in 'uSpieler.pas';
+  uSpieler in 'uSpieler.pas',
+  uLaser in 'uLaser.pas';
 
 {$R *.res}
 

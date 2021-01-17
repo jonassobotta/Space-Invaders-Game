@@ -7,17 +7,9 @@ uses  Winapi.Windows, System.SysUtils, Vcl.Forms, Vcl.ExtCtrls;
 type
   TSpieler = Class
     private
-      iXpos : integer;
-      iYpos : integer;
-      iSpeed : integer;
-      iHeight : integer;
-      iWidth : integer;
-      iLeben : integer;
+      iXpos, iYpos, iSpeed, iLeben : integer;
       strGFX : String;
-      bMovingL : boolean;
-      bMovingR : boolean;
-      bBorderL : boolean;
-      bBorderR : boolean;
+      bMovingL, bMovingR, bBorderL, bBorderR : boolean;
     public
 
 
@@ -44,6 +36,9 @@ type
       function GetbBorderR : boolean;
   End;
 
+const
+  iHeight = 250;
+  iWidth = 150;
 var
   imgBox : TImage;
 
@@ -55,8 +50,6 @@ constructor TSpieler.Create();
 begin
   self.iXpos := 425;
   self.iYpos := 500;
-  self.iHeight := 250;
-  self.iWidth := 150;
   self.iSpeed := 5;
   self.iLeben := 3;
 
@@ -69,8 +62,8 @@ begin
   imgBox := TImage.Create(parent);
   imgBox.Left := self.iXpos;
   imgBox.Top := self.iYpos;
-  imgBox.Width := self.iWidth;
-  imgBox.Height := self.iHeight;
+  imgBox.Width := iWidth;
+  imgBox.Height := iHeight;
   imgBox.Visible := True;
   imgBox.Parent := parent;
   imgBox.Picture.LoadFromFile(self.strGFX);
