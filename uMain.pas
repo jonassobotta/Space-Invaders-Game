@@ -38,6 +38,8 @@ var
   frmMain : TfrmMain;
   //Spieler
   Spieler : TSpieler;
+  Laser : TLaser;
+  bShooting : boolean;
 implementation
 
 {$R *.dfm}
@@ -72,9 +74,11 @@ begin
   Spieler := TSpieler.Create;
   Spieler.draw(frmMain);
   tmrSpieler.Enabled := true;
+  Laser := TLaser.Create;
 end;
 
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
+var i, j : integer;
 begin
   //Spieler bewegen
   if Spieler.GetbMovingL = true then
@@ -99,26 +103,46 @@ begin
   end
   else if Spieler.GetiXpos > 810 then
     Spieler.SetbBorderR(false);
+
+  //Laser
+  if bShooting then
+  begin
+    Laser.SetiXpos(Spieler.GetiXpos);
+    Laser.SetiYpos(Spieler.GetiXpos + Laser.GetiHeight);
+    Laser.draw(frmMain);
+  end;
 end;
 
 //Tasteneingabe
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  //Bewegung
   if (Key = vk_Left) and (Spieler.GetbBorderL = false) then
     Spieler.SetbMovingL(true);
 
   if (Key = vk_Right) and (Spieler.GetbBorderR = false) then
     Spieler.SetbMovingR(true);
+
+  //Laser
+  if Key = vk_Space then
+  begin
+    bShooting := true;
+  end;
 end;
 
 procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  //Bewegung
   if Key = vk_Left then
     Spieler.SetbMovingL(false);
 
   if Key = vk_Right then
     Spieler.SetbMovingR(false);
+
+  //Laser
+  if Key = vk_Space then
+    bShooting := false;
 end;
 end.

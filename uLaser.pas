@@ -7,7 +7,7 @@ uses Winapi.Windows, System.SysUtils, VCL.Forms, Vcl.ExtCtrls;
 type
   TLaser = Class
     private
-      iXpos, iYpos, iSpeed : integer;
+      iXpos, iYpos, iSpeed, iHeight, iWidth : integer;
       strGFX : String;
     public
       Constructor Create;
@@ -16,15 +16,15 @@ type
       procedure SetiYpos(iYpos : integer);
       procedure SetiSpeed(iSpeed : integer);
       procedure SetstrGFX(strGFX : String);
+      procedure draw(parent : TForm);
 
       function GetiXpos : integer;
       function GetiYpos : integer;
       function GetiSpeed : integer;
+      function GetiWidth : integer;
+      function GetiHeight : integer;
   End;
 
-const
-  iHeight = 15;
-  iWidth = 5;
 var
   imgBox : Timage;
 
@@ -35,9 +35,36 @@ implementation
 constructor TLaser.Create;
 begin
   self.iSpeed := 10;
+  self.iHeight := 30;
+  self.iWidth := 5;
+  self.strGFX := 'Grafiken/Laser.png';
 end;
 
+//Klassenfunktionen
+procedure TLaser.draw(parent: TForm);
+begin
+  imgBox := TImage.Create(parent);
+  imgBox.Left := self.iXpos;
+  imgBox.Top := self.iYpos;
+  imgBox.Width := iWidth;
+  imgBox.Height := iHeight;
+  imgBox.Visible := True;
+  imgBox.Parent := parent;
+  imgBox.Picture.LoadFromFile(self.strGFX);
+end;
+
+
 //Getter
+function TLaser.GetiWidth : integer;
+begin
+  result := self.iWidth;
+end;
+
+function TLaser.GetiHeight: integer;
+begin
+  result := self.iHeight;
+end;
+
 function TLaser.GetiSpeed: integer;
 begin
   result := self.iSpeed;
