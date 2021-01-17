@@ -14,6 +14,7 @@ object frmMain: TfrmMain
   Font.Style = []
   OldCreateOrder = False
   OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
   PixelsPerInch = 96
   TextHeight = 13
   object imgHintergrund: TImage
@@ -18857,5 +18858,12 @@ object frmMain: TfrmMain
       Transparent = True
       OnClick = imgEndeClick
     end
+  end
+  object tmrSpieler: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tmrSpielerTimer
+    Left = 8
+    Top = 8
   end
 end

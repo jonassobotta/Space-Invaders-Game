@@ -13,29 +13,39 @@ type
       iHeight : integer;
       iWidth : integer;
       iLeben : integer;
-
       strGFX : String;
+      bMovingL : boolean;
+      bMovingR : boolean;
+      bBorderL : boolean;
+      bBorderR : boolean;
     public
       Constructor Create;
+
       procedure draw(parent : TForm);
       procedure SetiXpos(iXpos : integer);
       procedure SetiYpos(iYpos : integer);
       procedure SetiSpeed(iSpeed : integer);
       procedure SetiLeben(iLeben : integer);
       procedure SetstrGFX(strGFX : String);
+      procedure SetbMovingR(bMovingR : boolean);
+      procedure SetbMovingL(bMovingL : boolean);
+      procedure SetbBorderR(bBorderR : boolean);
+      procedure SetbBorderL(bBorderL : boolean);
+
       function GetiXpos : integer;
       function GetiYpos : integer;
       function GetiSpeed : integer;
       function GetiLeben : integer;
+      function GetbMovingL : boolean;
+      function GetbMovingR : boolean;
+      function GetbBorderL : boolean;
+      function GetbBorderR : boolean;
   End;
-
 
 var
   imgBox : TImage;
 
 implementation
-
-
 
 { TSpieler }
 
@@ -65,6 +75,27 @@ begin
   imgBox.Picture.LoadFromFile(self.strGFX);
 end;
 
+//Getter
+function TSpieler.GetbBorderL: boolean;
+begin
+  result := self.bBorderL;
+end;
+
+function TSpieler.GetbBorderR: boolean;
+begin
+  result := self.bBorderR;
+end;
+
+function TSpieler.GetbMovingL: boolean;
+begin
+  result := self.bMovingL;
+end;
+
+function TSpieler.GetbMovingR: boolean;
+begin
+  result := self.bMovingR;
+end;
+
 function TSpieler.GetiLeben: integer;
 begin
   result := self.iLeben;
@@ -86,6 +117,26 @@ begin
 end;
 
 //Setter
+procedure TSpieler.SetbBorderL(bBorderL: boolean);
+begin
+  self.bBorderL := bBorderL;
+end;
+
+procedure TSpieler.SetbBorderR(bBorderR: boolean);
+begin
+  self.bBorderR := bBorderR;
+end;
+
+procedure TSpieler.SetbMovingL(bMovingL: boolean);
+begin
+  self.bMovingL := bMovingL;
+end;
+
+procedure TSpieler.SetbMovingR(bMovingR: boolean);
+begin
+  self.bMovingR := bMovingR;
+end;
+
 procedure TSpieler.SetiLeben(iLeben: integer);
 begin
   self.iLeben := iLeben;

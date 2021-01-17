@@ -18,6 +18,7 @@ type
     imgTutorial: TImage;
     imgEnde: TImage;
     imgHintergrund: TImage;
+    tmrSpieler: TTimer;
 
     procedure INIT;
     procedure imgStartenClick(Sender: TObject);
@@ -25,6 +26,8 @@ type
     procedure imgTutorialClick(Sender: TObject);
     procedure imgEndeClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure tmrSpielerTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -67,14 +70,39 @@ procedure TfrmMain.INIT;
 begin
   Spieler := TSpieler.Create;
   Spieler.draw(frmMain);
+  tmrSpieler.Enabled := true;
+end;
+
+procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
+begin
+  //Spieler bewegen
+  if Spieler.GetbMovingL = true then
+    Spieler.SetiXpos(Spieler.GetiXpos - Spieler.GetiSpeed);
+
+  if Spieler.GetbMovingR = true then
+    Spieler.SetiXpos(Spieler.GetiXpos + Spieler.GetiSpeed);
+
+  //Überprüfen, ob Spieler an den Bildschirmrand stößt
 end;
 
 //Tasteneingabe
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if Key = vk_Left then
-    Spieler.SetiXpos(300);
+  if (Key = vk_Left) and (Spieler.GetbBorderL = false) then
+    Spieler.SetbMovingL(true);
+
+  if (Key = vk_Right) and (Spieler.GetbBorderR = false) then
+    Spieler.SetbMovingR(true);
 end;
 
+procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = vk_Left then
+    Spieler.SetbMovingL(false);
+
+  if Key = vk_Right then
+    Spieler.SetbMovingR(false);
+end;
 end.
