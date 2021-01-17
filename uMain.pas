@@ -36,8 +36,8 @@ type
 
 var
   frmMain : TfrmMain;
+  //Spieler
   Spieler : TSpieler;
-
 implementation
 
 {$R *.dfm}
@@ -68,6 +68,7 @@ end;
 //Initalisierung
 procedure TfrmMain.INIT;
 begin
+  //Spieler
   Spieler := TSpieler.Create;
   Spieler.draw(frmMain);
   tmrSpieler.Enabled := true;
@@ -83,6 +84,21 @@ begin
     Spieler.SetiXpos(Spieler.GetiXpos + Spieler.GetiSpeed);
 
   //Überprüfen, ob Spieler an den Bildschirmrand stößt
+  if Spieler.GetiXpos <= 0 then
+  begin
+    Spieler.SetiXpos(0);
+    Spieler.SetbMovingL(false);
+  end
+  else if Spieler.GetiXpos > 0 then
+    Spieler.SetbBorderL(false);
+
+  if Spieler.GetiXpos >= 810 then
+  begin
+    Spieler.SetiXpos(810);
+    Spieler.SetbMovingR(false);
+  end
+  else if Spieler.GetiXpos > 810 then
+    Spieler.SetbBorderR(false);
 end;
 
 //Tasteneingabe

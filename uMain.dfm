@@ -7,6 +7,7 @@ object frmMain: TfrmMain
   ClientHeight = 600
   ClientWidth = 900
   Color = clWhite
+  DoubleBuffered = True
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

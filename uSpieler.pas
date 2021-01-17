@@ -19,6 +19,8 @@ type
       bBorderL : boolean;
       bBorderR : boolean;
     public
+
+
       Constructor Create;
 
       procedure draw(parent : TForm);
@@ -71,7 +73,6 @@ begin
   imgBox.Height := self.iHeight;
   imgBox.Visible := True;
   imgBox.Parent := parent;
-
   imgBox.Picture.LoadFromFile(self.strGFX);
 end;
 
