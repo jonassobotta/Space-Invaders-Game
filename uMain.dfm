@@ -13,6 +13,7 @@ object frmMain: TfrmMain
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object imgHintergrund: TImage

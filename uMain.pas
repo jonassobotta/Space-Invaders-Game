@@ -24,6 +24,7 @@ type
     procedure imgEinstellungenClick(Sender: TObject);
     procedure imgTutorialClick(Sender: TObject);
     procedure imgEndeClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private-Deklarationen }
   public
@@ -38,7 +39,7 @@ implementation
 
 {$R *.dfm}
 
-//Hauptmenü Prcedures
+//Hauptmenü
 procedure TfrmMain.imgEinstellungenClick(Sender: TObject);
 begin
 showmessage('Kranke Sachen einstellen');
@@ -52,7 +53,6 @@ end;
 
 procedure TfrmMain.imgStartenClick(Sender: TObject);
 begin
-showmessage('Was geht ab');
 MainMenu.Visible := false;
 INIT;
 end;
@@ -67,6 +67,14 @@ procedure TfrmMain.INIT;
 begin
   Spieler := TSpieler.Create;
   Spieler.draw(frmMain);
+end;
+
+//Tasteneingabe
+procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = vk_Left then
+    Spieler.SetiXpos(300);
 end;
 
 end.
