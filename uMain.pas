@@ -3,28 +3,27 @@ unit uMain;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.UITypes, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
   Vcl.StdCtrls, Vcl.Imaging.pngimage, uSpieler, uLaser;
 
 type
   TfrmMain = class(TForm)
     MainMenu: TPanel;
-    lblTitel: TLabel;
-    imgMMHintergrund: TImage;
-    lblCredits: TLabel;
-    imgStarten: TImage;
-    imgEinstellungen: TImage;
-    imgTutorial: TImage;
-    imgEnde: TImage;
-    imgHintergrund: TImage;
+    Hintergrudbild: TImage;
+    Starten: TImage;
+    Tutorial: TImage;
+    Überschrift: TImage;
+    Credits: TImage;
+    Einstellungen: TImage;
+    Ende: TImage;
     tmrSpieler: TTimer;
 
     procedure INIT;
-    procedure imgStartenClick(Sender: TObject);
-    procedure imgEinstellungenClick(Sender: TObject);
-    procedure imgTutorialClick(Sender: TObject);
-    procedure imgEndeClick(Sender: TObject);
+    procedure startenClick(Sender: TObject);
+    procedure EinstellungenClick(Sender: TObject);
+    procedure TutorialClick(Sender: TObject);
+    procedure EndeClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tmrSpielerTimer(Sender: TObject);
@@ -40,29 +39,31 @@ var
   Spieler : TSpieler;
   Laser : TLaser;
   bShooting : boolean;
+
 implementation
 
 {$R *.dfm}
 
-//Hauptmenü
-procedure TfrmMain.imgEinstellungenClick(Sender: TObject);
+
+
+procedure TfrmMain.EinstellungenClick(Sender: TObject);
 begin
 showmessage('Kranke Sachen einstellen');
 end;
 
-procedure TfrmMain.imgEndeClick(Sender: TObject);
+procedure TfrmMain.EndeClick(Sender: TObject);
 begin
 IF MessageDlg ('Schon aufgeben, oder was???',mtConfirmation,[mbYes,mbNo,mbCancel],0)=mrYes
   THEN Close;
 end;
 
-procedure TfrmMain.imgStartenClick(Sender: TObject);
+procedure TfrmMain.startenClick(Sender: TObject);
 begin
 MainMenu.Visible := false;
 INIT;
 end;
 
-procedure TfrmMain.imgTutorialClick(Sender: TObject);
+procedure TfrmMain.TutorialClick(Sender: TObject);
 begin
 showmessage('Wir zeigen euch wies geht');
 end;
@@ -78,9 +79,8 @@ begin
 end;
 
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
-var i, j : integer;
 begin
-  //Spieler bewegen
+//Spieler bewegen
   if Spieler.GetbMovingL = true then
     Spieler.SetiXpos(Spieler.GetiXpos - Spieler.GetiSpeed);
 
@@ -103,21 +103,12 @@ begin
   end
   else if Spieler.GetiXpos > 810 then
     Spieler.SetbBorderR(false);
-
-  //Laser
-  if bShooting then
-  begin
-    Laser.SetiXpos(Spieler.GetiXpos);
-    Laser.SetiYpos(Spieler.GetiXpos + Laser.GetiHeight);
-    Laser.draw(frmMain);
-  end;
 end;
 
-//Tasteneingabe
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  //Bewegung
+//Bewegung
   if (Key = vk_Left) and (Spieler.GetbBorderL = false) then
     Spieler.SetbMovingL(true);
 
@@ -131,10 +122,9 @@ begin
   end;
 end;
 
-procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  //Bewegung
+//Bewegung
   if Key = vk_Left then
     Spieler.SetbMovingL(false);
 
@@ -145,4 +135,6 @@ begin
   if Key = vk_Space then
     bShooting := false;
 end;
+
+
 end.
