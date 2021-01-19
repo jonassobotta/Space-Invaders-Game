@@ -34,9 +34,11 @@ implementation
 
 constructor TLaser.Create;
 begin
-  self.iSpeed := 10;
+  self.iSpeed := 5;
   self.iHeight := 30;
   self.iWidth := 5;
+  self.iXpos := -20;
+  self.iYpos := -20;
   self.strGFX := 'Grafiken/Laser.png';
 end;
 
@@ -89,11 +91,13 @@ end;
 procedure TLaser.SetiXpos(iXpos : integer);
 begin
   self.iXpos := iXpos;
+  imgBox.Left := self.iXpos
 end;
 
 procedure TLaser.SetiYpos(iYpos : integer);
 begin
   self.iYpos := iYpos;
+  imgBox.Top := self.iYpos
 end;
 
 procedure TLaser.SetstrGFX(strGFX : String);

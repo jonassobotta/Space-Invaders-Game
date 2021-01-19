@@ -18,6 +18,8 @@ type
     Einstellungen: TImage;
     Ende: TImage;
     tmrSpieler: TTimer;
+    MainHintergrund: TImage;
+    tmrLaser: TTimer;
 
     procedure INIT;
     procedure startenClick(Sender: TObject);
@@ -27,6 +29,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tmrSpielerTimer(Sender: TObject);
+    procedure tmrLaserTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -38,7 +41,8 @@ var
   //Spieler
   Spieler : TSpieler;
   Laser : TLaser;
-  bShooting : boolean;
+  iLaserAnz : integer;
+  bLaserKollision : boolean;
 
 implementation
 
@@ -75,7 +79,30 @@ begin
   Spieler := TSpieler.Create;
   Spieler.draw(frmMain);
   tmrSpieler.Enabled := true;
+
+  //Laser
   Laser := TLaser.Create;
+  Laser.draw(frmMain);
+  iLaserAnz := 0;
+end;
+
+procedure TfrmMain.tmrLaserTimer(Sender: TObject);
+begin
+
+  //Laser bewegen
+  Laser.SetiYpos(Laser.GetiYpos - Laser.GetiSpeed);
+
+  //Kollisionsabfragen
+  if bLaserKollision then
+  begin
+    iLaserAnz := 0;
+    Laser.SetiXpos(-20);
+    Laser.SetiYpos(-20);
+    tmrLaser.Enabled := false;
+  end;
+
+  if Laser.GetiYpos <= 0then
+    bLaserKollision := true;
 end;
 
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
@@ -116,9 +143,13 @@ begin
     Spieler.SetbMovingR(true);
 
   //Laser
-  if Key = vk_Space then
+  if (Key = vk_Space) and (iLaserANz = 0) then
   begin
-    bShooting := true;
+      Laser.SetiXpos(Round(Spieler.GetiXpos + Spieler.GetiWidth / 2));
+      Laser.SetiYpos(Spieler.GetiYpos - Laser.GetiHeight);
+      iLaserAnz := iLaserAnz + 1;
+      bLaserKollision := false;
+      tmrLaser.Enabled := true;
   end;
 end;
 
@@ -130,10 +161,6 @@ begin
 
   if Key = vk_Right then
     Spieler.SetbMovingR(false);
-
-  //Laser
-  if Key = vk_Space then
-    bShooting := false;
 end;
 
 

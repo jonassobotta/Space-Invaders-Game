@@ -30,6 +30,8 @@ type
       function GetiYpos : integer;
       function GetiSpeed : integer;
       function GetiLeben : integer;
+      function GetiWidth : integer;
+      function GetiHeight : integer;
       function GetbMovingL : boolean;
       function GetbMovingR : boolean;
       function GetbBorderL : boolean;
@@ -37,8 +39,8 @@ type
   End;
 
 const
-  iHeight = 250;
-  iWidth = 150;
+  iHeight = 96;
+  iWidth = 96;
 var
   imgBox : TImage;
 
@@ -50,7 +52,7 @@ constructor TSpieler.Create();
 begin
   self.iXpos := 425;
   self.iYpos := 500;
-  self.iSpeed := 5;
+  self.iSpeed := 6;
   self.iLeben := 3;
 
   self.strGFX := 'Grafiken/Raumschiff.png';
@@ -88,6 +90,16 @@ end;
 function TSpieler.GetbMovingR: boolean;
 begin
   result := self.bMovingR;
+end;
+
+function TSpieler.GetiHeight: integer;
+begin
+  result := iHeight;
+end;
+
+function TSpieler.GetiWidth: integer;
+begin
+  result := iWidth;
 end;
 
 function TSpieler.GetiLeben: integer;
