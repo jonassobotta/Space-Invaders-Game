@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   uMain in 'uMain.pas' {frmMain},
   uLaser in 'uLaser.pas',
-  uSpieler in 'uSpieler.pas';
+  uSpieler in 'uSpieler.pas',
+  uAlien in 'uAlien.pas';
 
 {$R *.res}
 

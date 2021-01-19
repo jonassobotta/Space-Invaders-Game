@@ -38,11 +38,17 @@ type
 
 var
   frmMain : TfrmMain;
+
   //Spieler
   Spieler : TSpieler;
+
+  //Laser
   Laser : TLaser;
   iLaserAnz : integer;
   bLaserKollision : boolean;
+
+  //Aliens
+  Aliens : array[1..2, 1..10] of TAlien;
 
 implementation
 
@@ -74,6 +80,7 @@ end;
 
 //Initalisierung
 procedure TfrmMain.INIT;
+var i, j, iAlienPosX, iAlienPosY: integer;
 begin
   //Spieler
   Spieler := TSpieler.Create;
@@ -84,6 +91,24 @@ begin
   Laser := TLaser.Create;
   Laser.draw(frmMain);
   iLaserAnz := 0;
+
+  //Aliens
+  iAlienPosX := 20;
+  iAlienPOsY := 10;
+
+  for i := 1 to 2 do
+  begin
+    for j := 1 to 10 do
+    begin
+      Aliens[i][j] := TAlien.Create;
+      Aliens[i][j].draw(frmMain);
+      Aliens[i][j].SetiXpos(iAlienPosX);
+      Aliens[i][j].SetiYpos(iAlienPosY);
+      iAlienPosX := iALienPosX + 84;
+    end;
+    iAlienPosX := 20;
+    iAlienPosY := iAlienPosY + 74;
+  end;
 end;
 
 procedure TfrmMain.tmrLaserTimer(Sender: TObject);

@@ -39,14 +39,14 @@ end;
 
 procedure TAlien.draw(parent: TForm);
 begin
-  imgBox := TImage.Create(parent);
-  imgBox.Left := self.iXpos;
-  imgBox.Top := self.iYpos;
-  imgBox.Width := iWidth;
-  imgBox.Height := iHeight;
-  imgBox.Visible := True;
-  imgBox.Parent := parent;
-  imgBox.Picture.LoadFromFile(self.strGFX);
+  self.imgBox := TImage.Create(parent);
+  self.imgBox.Left := self.iXpos;
+  self.imgBox.Top := self.iYpos;
+  self.imgBox.Width := iWidth;
+  self.imgBox.Height := iHeight;
+  self.imgBox.Visible := True;
+  self.imgBox.Parent := parent;
+  self.imgBox.Picture.LoadFromFile(self.strGFX);
 end;
 
 //Getter
@@ -64,11 +64,13 @@ end;
 procedure TAlien.SetiXpos(iXpos: integer);
 begin
   self.iXpos := iXpos;
+  self.imgBox.Left := self.iXpos;
 end;
 
 procedure TAlien.SetiYpos(iYpos: integer);
 begin
-  self.iXpos := iYpos;
+  self.iYpos := iYpos;
+  self.imgBox.Top := self.iYpos;
 end;
 
 procedure TAlien.SetstrGFX(strGFX: String);
