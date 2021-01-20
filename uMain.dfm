@@ -19223,4 +19223,11 @@
     Left = 16
     Top = 80
   end
+  object tmrAliens: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrAliensTimer
+    Left = 16
+    Top = 136
+  end
 end

@@ -7,7 +7,7 @@ uses Winapi.Windows, System.SysUtils, VCL.Forms, Vcl.ExtCtrls;
 type
   TAlien = Class
     private
-      iXpos, iYpos : integer;
+      iXpos, iYpos, iRichtung, iSpeed : integer;
       strGFX : String;
       imgBox : TImage;
 
@@ -21,9 +21,15 @@ type
       procedure SetiXpos(iXpos : integer);
       procedure SetiYpos(iYpos : integer);
       procedure SetstrGFX(strGFX : String);
+      procedure SetiSpeed(iSpeed : integer);
+      procedure SetiRichtung(iRichtung : integer);
 
       function GetiXpos : integer;
       function GetiYpos : integer;
+      function GetiSpeed : integer;
+      function GetiRichtung : integer;
+      function GetiHeight : integer;
+      function GetiWidth : integer;
   End;
 
 implementation
@@ -34,6 +40,8 @@ constructor TAlien.Create;
 begin
   self.iXpos := 0;
   self.iYpos := 0;
+  self.iSpeed := 5;
+  self.iRichtung := 1;
   self.strGFX := 'Grafiken/AlienI.png';
 end;
 
@@ -50,6 +58,26 @@ begin
 end;
 
 //Getter
+function TAlien.GetiHeight: integer;
+begin
+  result := self.iHeight;
+end;
+
+function TAlien.GetiWidth: integer;
+begin
+  result := self.iWidth;
+end;
+
+function TAlien.GetiRichtung: integer;
+begin
+  result := self.iRichtung;
+end;
+
+function TAlien.GetiSpeed: integer;
+begin
+  result := self.iSpeed;
+end;
+
 function TAlien.GetiXpos: integer;
 begin
   result := self.iXpos;
@@ -61,6 +89,16 @@ begin
 end;
 
 //Setter
+procedure TAlien.SetiRichtung(iRichtung: integer);
+begin
+  self.iRichtung := iRichtung;
+end;
+
+procedure TAlien.SetiSpeed(iSpeed: integer);
+begin
+  self.iSpeed := iSpeed;
+end;
+
 procedure TAlien.SetiXpos(iXpos: integer);
 begin
   self.iXpos := iXpos;

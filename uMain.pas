@@ -20,6 +20,7 @@ type
     tmrSpieler: TTimer;
     MainHintergrund: TImage;
     tmrLaser: TTimer;
+    tmrAliens: TTimer;
 
     procedure INIT;
     procedure startenClick(Sender: TObject);
@@ -30,6 +31,7 @@ type
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure tmrSpielerTimer(Sender: TObject);
     procedure tmrLaserTimer(Sender: TObject);
+    procedure tmrAliensTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -93,7 +95,7 @@ begin
   iLaserAnz := 0;
 
   //Aliens
-  iAlienPosX := 20;
+  iAlienPosX := 40;
   iAlienPOsY := 10;
 
   for i := 1 to 2 do
@@ -106,9 +108,47 @@ begin
       Aliens[i][j].SetiYpos(iAlienPosY);
       iAlienPosX := iALienPosX + 84;
     end;
-    iAlienPosX := 20;
+    iAlienPosX := 40;
     iAlienPosY := iAlienPosY + 74;
   end;
+
+  tmrAliens.Enabled := true;
+end;
+
+procedure TfrmMain.tmrAliensTimer(Sender: TObject);
+var
+  i, j: Integer;
+begin
+  //Aliens bewegen
+  if Aliens[1][1].GetiXpos <= 0 then
+  begin
+    for i := 1 to 2 do
+    begin
+      for j := 1 to 10 do
+      begin
+        Aliens[i][j].SetiYpos(Aliens[i][j].GetiYpos + 10);
+        Aliens[i][j].SetiRichtung(1);
+      end;
+    end;
+  end;
+  if Aliens[1][10].GetiXpos + Aliens[1][10].GetiWidth >= 900 then
+  begin
+    for i := 1 to 2 do
+    begin
+      for j := 1 to 10 do
+      begin
+        Aliens[i][j].SetiYpos(Aliens[i][j].GetiYpos + 10);
+        Aliens[i][j].SetiRichtung(-1);
+      end;
+    end;
+  end;
+
+  for i := 1 to 2 do
+  begin
+    for j := 1 to 10 do
+      Aliens[i][j].SetiXpos(Aliens[i][j].GetiXpos + Aliens[i][j].GetiSpeed * Aliens[i][j].GetiRichtung);
+  end;
+
 end;
 
 procedure TfrmMain.tmrLaserTimer(Sender: TObject);
