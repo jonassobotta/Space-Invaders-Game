@@ -152,6 +152,7 @@ begin
 end;
 
 procedure TfrmMain.tmrLaserTimer(Sender: TObject);
+var i, j : integer;
 begin
 
   //Laser bewegen
@@ -168,6 +169,25 @@ begin
 
   if Laser.GetiYpos <= 0then
     bLaserKollision := true;
+
+  for i := 1 to 2 do
+  begin
+    for j := 1 to 10 do
+    begin
+      if (Laser.GetiYpos <= Aliens[i][j].GetiYpos) and ((Laser.GetiXpos >= Aliens[i][j].GetiXpos) and
+         (Laser.GetiXpos + Laser.GetiWidth <= Aliens[i][j].GetiXpos + Aliens[i][j].GetiWidth)) and (Aliens[i][j].GetbGetroffen = false) then
+          begin
+            iLaserAnz := 0;
+            Laser.SetiXpos(-20);
+            Laser.SetiYpos(-20);
+            tmrLaser.Enabled := false;
+            Aliens[i][j].SetbGetroffen(true);
+            Aliens[i][j].GetimgBox.Picture := nil;
+          end;
+
+    end;
+  end;
+
 end;
 
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);

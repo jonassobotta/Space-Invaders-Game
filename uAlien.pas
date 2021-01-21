@@ -10,7 +10,7 @@ type
       iXpos, iYpos, iRichtung, iSpeed : integer;
       strGFX : String;
       imgBox : TImage;
-
+      bGetroffen : boolean;
       const
         iHeight = 64;
         iWidth = 64;
@@ -18,18 +18,21 @@ type
       Constructor Create;
 
       procedure draw(parent : TForm);
+      procedure SetbGetroffen(bGetroffen : boolean);
       procedure SetiXpos(iXpos : integer);
       procedure SetiYpos(iYpos : integer);
       procedure SetstrGFX(strGFX : String);
       procedure SetiSpeed(iSpeed : integer);
       procedure SetiRichtung(iRichtung : integer);
 
+      function GetbGetroffen : boolean;
       function GetiXpos : integer;
       function GetiYpos : integer;
       function GetiSpeed : integer;
       function GetiRichtung : integer;
       function GetiHeight : integer;
       function GetiWidth : integer;
+      function GetimgBox : TImage;
   End;
 
 implementation
@@ -58,9 +61,19 @@ begin
 end;
 
 //Getter
+function TAlien.GetbGetroffen: boolean;
+begin
+  result := self.bGetroffen;
+end;
+
 function TAlien.GetiHeight: integer;
 begin
   result := self.iHeight;
+end;
+
+function TAlien.GetimgBox: TImage;
+begin
+ result := self.imgBox
 end;
 
 function TAlien.GetiWidth: integer;
@@ -89,6 +102,11 @@ begin
 end;
 
 //Setter
+procedure TAlien.SetbGetroffen(bGetroffen: boolean);
+begin
+  self.bGetroffen := bGetroffen;
+end;
+
 procedure TAlien.SetiRichtung(iRichtung: integer);
 begin
   self.iRichtung := iRichtung;

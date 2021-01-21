@@ -1,6 +1,8 @@
 ﻿object frmMain: TfrmMain
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'frmMain'
   ClientHeight = 600
   ClientWidth = 900
@@ -19225,7 +19227,7 @@
   end
   object tmrAliens: TTimer
     Enabled = False
-    Interval = 500
+    Interval = 100
     OnTimer = tmrAliensTimer
     Left = 16
     Top = 136
