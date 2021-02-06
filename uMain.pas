@@ -142,9 +142,9 @@ begin
 
   for i := Low(Aliens) to High(Aliens) do
   begin
-    if Length(Aliens) = 10 then Aliens[i].SetiSpeed(10);
-    if length(Aliens) = 5  then Aliens[i].SetiSpeed(15);
-    if Length(Aliens) = 1  then Aliens[i].SetiSpeed(20);
+    if Length(Aliens) = 10 then Aliens[i].SetiSpeed(3);
+    if length(Aliens) = 5  then Aliens[i].SetiSpeed(5);
+    if Length(Aliens) = 1  then Aliens[i].SetiSpeed(7);
     
     if Aliens[i].GetiXpos <= 0 then
       begin

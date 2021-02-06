@@ -43,7 +43,7 @@ constructor TAlien.Create;
 begin
   self.iXpos := 0;
   self.iYpos := 0;
-  self.iSpeed := 5;
+  self.iSpeed := 1;
   self.iRichtung := 1;
   self.strGFX := 'Grafiken/AlienI.png';
 end;

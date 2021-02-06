@@ -34,7 +34,7 @@ implementation
 
 constructor TLaser.Create;
 begin
-  self.iSpeed := 7;
+  self.iSpeed := 12;
   self.iHeight := 30;
   self.iWidth := 5;
   self.iXpos := -20;
