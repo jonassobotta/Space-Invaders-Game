@@ -42,15 +42,12 @@ type
 var
   frmMain : TfrmMain;
 
-  //Spieler
   Spieler : TSpieler;
 
-  //Laser
   Laser : TLaser;
   iLaserAnz : integer;
   bLaserKollision : boolean;
 
-  //Aliens
   Aliens : array of TAlien;
 
 implementation
@@ -61,16 +58,15 @@ implementation
 
 procedure TfrmMain.DeleteArrayElement(index: integer);
 begin
-  if index > High(Aliens) then Exit;
-  if index < Low(Aliens) then Exit;
-  if index = High(Aliens) then
+  if index > High(Aliens) then Exit; //Ist der übergebene Index größer als der höchste Array index
+  if index < Low(Aliens) then Exit;  //Ist der übergebene Index kleiner als der niedrigste Array index
+  if index = High(Aliens) then //Höchstes element --> kein Move nötig
   begin
     SetLength(Aliens, Length(Aliens) - 1);
     Exit;
   end;
   Finalize(Aliens[Index]);
-  System.Move(Aliens[Index +1], Aliens[Index],
-  (Length(Aliens) - Index -1) * SizeOf(string) + 1);
+  System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
   SetLength(Aliens, Length(Aliens) - 1);
 end;
 
@@ -115,6 +111,7 @@ begin
   iAlienPOsY := 10;
   SetLength(Aliens, 20);
 
+  //Aliens auf Bildschirm rendern
   for i := Low(Aliens) to High(Aliens) do
   begin
       Aliens[i] := TAlien.Create;
@@ -186,6 +183,7 @@ begin
     tmrLaser.Enabled := false;
   end;
 
+  //Laser trifft bildschirmrand
   if Laser.GetiYpos <= 0then
     bLaserKollision := true;
 
@@ -209,7 +207,7 @@ end;
 
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
 begin
-//Spieler bewegen
+  //Spieler bewegen
   if Spieler.GetbMovingL = true then
     Spieler.SetiXpos(Spieler.GetiXpos - Spieler.GetiSpeed);
 
