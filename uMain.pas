@@ -94,7 +94,7 @@ end;
 
 //Initalisierung
 procedure TfrmMain.INIT;
-var i, iAlienPosX, iAlienPosY: integer;
+var i, AlienPosX, AlienPosY: integer;
 begin
   //Spieler
   Spieler := TSpieler.Create;
@@ -107,23 +107,21 @@ begin
   iLaserAnz := 0;
 
   //Aliens
-  iAlienPosX := 40;
-  iAlienPOsY := 10;
+  AlienPosX := 40;
+  AlienPOsY := 10;
   SetLength(Aliens, 20);
 
   //Aliens auf Bildschirm rendern
   for i := Low(Aliens) to High(Aliens) do
   begin
-      Aliens[i] := TAlien.Create;
-      Aliens[i].draw(frmMain);
-      Aliens[i].SetiXpos(iAlienPosX);
-      Aliens[i].SetiYpos(iAlienPosY);
-      iAlienPosX := iALienPosX + 84;
+      Aliens[i] := TAlien.Create(frmMain);
+      Aliens[i].Render(frmMain, AlienPosX, AlienPosY, 64, 64, 'Grafiken/Alien1.png');
+      AlienPosX := ALienPosX + 84;
 
-      if Aliens[i].GetimgBox.Left + Aliens[i].GetiWidth >= 810 then
+      if Aliens[i].Left + Aliens[i].Width >= 810 then
       begin
-        iAlienPosY := iAlienPosY + 74;
-        iAlienPosX := 40;
+        AlienPosY := AlienPosY + 74;
+        AlienPosX := 40;
       end;
   end;
 
@@ -137,33 +135,34 @@ begin
   //Aliens bewegen
   if Length(Aliens) = 0 then tmrAliens.Enabled := false;
 
+
   for i := Low(Aliens) to High(Aliens) do
   begin
-    if Length(Aliens) = 10 then Aliens[i].SetiSpeed(3);
-    if length(Aliens) = 5  then Aliens[i].SetiSpeed(5);
-    if Length(Aliens) = 1  then Aliens[i].SetiSpeed(7);
-    
-    if Aliens[i].GetiXpos <= 0 then
+    if Length(Aliens) = 10 then Aliens[i].SetSpeed(3);
+    if length(Aliens) = 5  then Aliens[i].SetSpeed(5);
+    if Length(Aliens) = 1  then Aliens[i].SetSpeed(7);
+
+    if Aliens[i].Left <= 0 then
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].SetiYpos(Aliens[j].GetiYpos + 10);
-          Aliens[j].SetiRichtung(1);
+          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].SetDirection(1);
         end;
       end;
-    if Aliens[i].GetiXpos + Aliens[i].GetiWidth >= 900 then
+    if Aliens[i].Left + Aliens[i].Width >= 900 then
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].SetiYpos(Aliens[j].GetiYpos + 10);
-          Aliens[j].SetiRichtung(-1);
+          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].SetDirection(-1);
         end;
     end;
   end;
 
 
   for i := Low(Aliens) to High(Aliens) do
-    Aliens[i].SetiXpos(Aliens[i].GetiXpos + Aliens[i].GetiSpeed * Aliens[i].GetiRichtung);
+    Aliens[i].Left := Aliens[i].Left + Aliens[i].GetSpeed * Aliens[i].GetDirection;
 
 end;
 
@@ -190,15 +189,14 @@ begin
   //Laser trifft Alien
   for i := Low(Aliens) to High(Aliens) do
   begin
-      if (Laser.GetiYpos <= Aliens[i].GetiYpos) and ((Laser.GetiXpos >= Aliens[i].GetiXpos) and
-         (Laser.GetiXpos + Laser.GetiWidth <= Aliens[i].GetiXpos + Aliens[i].GetiWidth)) and (Aliens[i].GetbGetroffen = false) then
+      if (Laser.GetiYpos <= Aliens[i].Top) and ((Laser.GetiXpos >= Aliens[i].Left) and
+         (Laser.GetiXpos + Laser.GetiWidth <= Aliens[i].Left + Aliens[i].Width)) then
           begin
             iLaserAnz := 0;
             Laser.SetiXpos(-20);
             Laser.SetiYpos(-20);
             tmrLaser.Enabled := false;
-            Aliens[i].GetimgBox.Destroy;
-            Aliens[i].Destroy;
+            Aliens[i].Free;
             DeleteArrayElement(i);
           end;
   end;
