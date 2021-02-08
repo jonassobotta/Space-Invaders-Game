@@ -19758,7 +19758,7 @@
   end
   object tmrAliens: TTimer
     Enabled = False
-    Interval = 10
+    Interval = 30
     OnTimer = tmrAliensTimer
     Left = 16
     Top = 136

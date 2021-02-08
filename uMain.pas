@@ -45,8 +45,8 @@ var
   Player : TPlayer;
 
   Laser : TLaser;
-  iLaserAnz : integer;
-  bLaserKollision : boolean;
+  LaserAnz : integer;
+  LaserKollision : boolean;
 
   Aliens : array of TAlien;
 
@@ -102,9 +102,7 @@ begin
   tmrSpieler.Enabled := true;
 
   //Laser
-  Laser := TLaser.Create;
-  Laser.draw(frmMain);
-  iLaserAnz := 0;
+  LaserAnz := 0;
 
   //Aliens
   AlienPosX := 40;
@@ -171,31 +169,27 @@ var i : integer;
 begin
 
   //Laser bewegen
-  Laser.SetiYpos(Laser.GetiYpos - Laser.GetiSpeed);
+  Laser.Top := Laser.Top - Laser.GetSpeed;
 
   //Kollisionsabfragen
-  if bLaserKollision then
+  if LaserKollision then
   begin
-    iLaserAnz := 0;
-    Laser.SetiXpos(-20);
-    Laser.SetiYpos(-20);
+    LaserAnz := 0;
     tmrLaser.Enabled := false;
+    Laser.Free;
   end;
 
   //Laser trifft bildschirmrand
-  if Laser.GetiYpos <= 0then
-    bLaserKollision := true;
+  if Laser.Top <= 0then
+    LaserKollision := true;
 
   //Laser trifft Alien
   for i := Low(Aliens) to High(Aliens) do
   begin
-      if (Laser.GetiYpos <= Aliens[i].Top) and ((Laser.GetiXpos >= Aliens[i].Left) and
-         (Laser.GetiXpos + Laser.GetiWidth <= Aliens[i].Left + Aliens[i].Width)) then
+      if (Laser.Top <= Aliens[i].Top) and ((Laser.Left >= Aliens[i].Left) and
+         (Laser.Left + Laser.width <= Aliens[i].Left + Aliens[i].Width)) then
           begin
-            iLaserAnz := 0;
-            Laser.SetiXpos(-20);
-            Laser.SetiYpos(-20);
-            tmrLaser.Enabled := false;
+            LaserKollision := True;
             Aliens[i].Free;
             DeleteArrayElement(i);
           end;
@@ -232,8 +226,10 @@ end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+  LaserHeight: integer;
 begin
-//Bewegung
+  //Spieler Bewegung
   if (Key = vk_Left) and (player.GetBorderL = false) then
     Player.SetMovingL(true);
 
@@ -241,12 +237,13 @@ begin
     Player.SetMovingR(true);
 
   //Laser
-  if (Key = vk_Space) and (iLaserANz = 0) then
+  LaserHeight := 30;
+  if (Key = vk_Space) and (LaserAnz = 0) then
   begin
-      Laser.SetiXpos(Round(Player.Left + Player.Width / 2));
-      Laser.SetiYpos(Player.Top - Laser.GetiHeight);
-      iLaserAnz := iLaserAnz + 1;
-      bLaserKollision := false;
+      Laser := TLaser.Create(frmMain);
+      Laser.Render(frmMain, Player.Left + Round(Player.Width/2), (Player.Top - LaserHeight), 'Grafiken/Laser.png');
+      LaserAnz := LaserAnz + 1;
+      LaserKollision := false;
       tmrLaser.Enabled := true;
   end;
 end;
