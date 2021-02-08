@@ -10,7 +10,7 @@ type
       Direction, Speed : integer;
 
     public
-      procedure Render(parent : TForm; Xpos : integer; Ypos : integer; width : integer; height : integer; GfxPath : String);
+      procedure Render(parent : TForm; Xpos, Ypos, width, height : integer; GfxPath : String);
 
       procedure SetDirection(direction : integer);
       procedure SetSpeed(speed : integer);

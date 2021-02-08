@@ -103,7 +103,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uLaser.pas"/>
-        <DCCReference Include="uSpieler.pas"/>
+        <DCCReference Include="uPlayer.pas"/>
         <DCCReference Include="uAlien.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

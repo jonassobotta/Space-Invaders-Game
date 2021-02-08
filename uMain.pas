@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
-  Vcl.StdCtrls, Vcl.Imaging.pngimage, uSpieler, uLaser, uAlien;
+  Vcl.StdCtrls, Vcl.Imaging.pngimage, uPlayer, uLaser, uAlien;
 
 type
   TfrmMain = class(TForm)
@@ -42,7 +42,7 @@ type
 var
   frmMain : TfrmMain;
 
-  Spieler : TSpieler;
+  Player : TPlayer;
 
   Laser : TLaser;
   iLaserAnz : integer;
@@ -97,8 +97,8 @@ procedure TfrmMain.INIT;
 var i, AlienPosX, AlienPosY: integer;
 begin
   //Spieler
-  Spieler := TSpieler.Create;
-  Spieler.draw(frmMain);
+  Player := TPlayer.Create(frmMain);
+  Player.Render(frmMain, 425, 500, 96, 96, 'Grafiken/Player.png');
   tmrSpieler.Enabled := true;
 
   //Laser
@@ -206,45 +206,45 @@ end;
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
 begin
   //Spieler bewegen
-  if Spieler.GetbMovingL = true then
-    Spieler.SetiXpos(Spieler.GetiXpos - Spieler.GetiSpeed);
+  if Player.GetMovingL = true then
+    Player.Left := Player.Left - Player.GetSpeed;
 
-  if Spieler.GetbMovingR = true then
-    Spieler.SetiXpos(Spieler.GetiXpos + Spieler.GetiSpeed);
+  if Player.GetMovingR = true then
+    Player.Left := Player.Left + Player.GetSpeed;
 
   //Überprüfen, ob Spieler an den Bildschirmrand stößt
-  if Spieler.GetiXpos <= 0 then
+  if PLayer.Left <= 0 then
   begin
-    Spieler.SetiXpos(0);
-    Spieler.SetbMovingL(false);
+    Player.Left := 0;
+    Player.SetMovingL(false);
   end
-  else if Spieler.GetiXpos > 0 then
-    Spieler.SetbBorderL(false);
+  else if Player.Left > 0 then
+    Player.SetBorderL(false);
 
-  if Spieler.GetiXpos >= 810 then
+  if Player.Left >= 810 then
   begin
-    Spieler.SetiXpos(810);
-    Spieler.SetbMovingR(false);
+    Player.Left := 810;
+    Player.SetMovingR(false);
   end
-  else if Spieler.GetiXpos > 810 then
-    Spieler.SetbBorderR(false);
+  else if Player.Left > 810 then
+    Player.SetBorderR(false);
 end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
 //Bewegung
-  if (Key = vk_Left) and (Spieler.GetbBorderL = false) then
-    Spieler.SetbMovingL(true);
+  if (Key = vk_Left) and (player.GetBorderL = false) then
+    Player.SetMovingL(true);
 
-  if (Key = vk_Right) and (Spieler.GetbBorderR = false) then
-    Spieler.SetbMovingR(true);
+  if (Key = vk_Right) and (Player.GetBorderR = false) then
+    Player.SetMovingR(true);
 
   //Laser
   if (Key = vk_Space) and (iLaserANz = 0) then
   begin
-      Laser.SetiXpos(Round(Spieler.GetiXpos + Spieler.GetiWidth / 2));
-      Laser.SetiYpos(Spieler.GetiYpos - Laser.GetiHeight);
+      Laser.SetiXpos(Round(Player.Left + Player.Width / 2));
+      Laser.SetiYpos(Player.Top - Laser.GetiHeight);
       iLaserAnz := iLaserAnz + 1;
       bLaserKollision := false;
       tmrLaser.Enabled := true;
@@ -255,10 +255,10 @@ procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState)
 begin
 //Bewegung
   if Key = vk_Left then
-    Spieler.SetbMovingL(false);
+    Player.SetMovingL(false);
 
   if Key = vk_Right then
-    Spieler.SetbMovingR(false);
+    Player.SetMovingR(false);
 end;
 
 
