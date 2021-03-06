@@ -21,6 +21,7 @@ type
     MainHintergrund: TImage;
     tmrLaser: TTimer;
     tmrAliens: TTimer;
+    tmrAlienLaser: TTimer;
 
     procedure INIT;
     procedure startenClick(Sender: TObject);
@@ -33,6 +34,7 @@ type
     procedure tmrLaserTimer(Sender: TObject);
     procedure tmrAliensTimer(Sender: TObject);
     procedure DeleteArrayElement(index : integer);
+    procedure tmrAlienLaserTimer(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -49,6 +51,8 @@ var
   LaserKollision : boolean;
 
   Aliens : array of TAlien;
+  AlienLaser : array of TLaser;
+  maxAlienLaser, ALC : integer;
 
 implementation
 
@@ -108,6 +112,8 @@ begin
   AlienPosX := 40;
   AlienPOsY := 10;
   SetLength(Aliens, 20);
+  maxAlienLaser := 5;
+  ALC := 0;
 
   //Aliens auf Bildschirm rendern
   for i := Low(Aliens) to High(Aliens) do
@@ -123,7 +129,8 @@ begin
       end;
   end;
 
-  tmrAliens.Enabled := true;
+  //tmrAliens.Enabled := true;
+  tmrAlienLaser.Enabled := true;
 end;
 
 //Alien Timer
@@ -169,7 +176,36 @@ begin
 
   for i := Low(Aliens) to High(Aliens) do
     Aliens[i].Left := Aliens[i].Left + Aliens[i].GetSpeed * Aliens[i].GetDirection;
+end;
 
+//Alien Laser Timer
+procedure TfrmMain.tmrAlienLaserTimer(Sender: TObject);
+var ShootingAlien, HalfOfALiens, i, LaserHeight : integer;
+begin
+  Randomize;
+  ShootingAlien := Random(Length(Aliens) - 1) + 0;
+
+  if ALC < maxAlienLaser then
+  begin
+    //überprüfen, ob vor dem schießenden Alien noch ein anderes Alien ist
+    HalfOfALiens := Round(Length(Aliens) / 2) - 1;
+
+    if (ShootingAlien < HalfOfAliens) and ((Aliens[ShootingAlien].Height + 20) >= Aliens[HalfOfALiens].Top) and
+       (Aliens[ShootingAlien].Left + Aliens[ShootingAlien].Width <= Aliens[HalfOfALiens].Left + Aliens[HalfOfALiens].Width) then
+          exit
+    else
+       begin
+          //Alien Laser erzeugen
+          ALC := ALC + 1;
+          SetLength(AlienLaser, ALC);
+          LaserHeight := 30;
+          for i := Low(AlienLaser) to High(AlienLaser) do
+          begin
+            AlienLaser[i] := TLaser.Create(frmMain);
+            AlienLaser[i].Render(frmMain, Aliens[ShootingAlien].Left + (Round(Aliens[ShootingAlien].Width / 2)), ALiens[ShootingAlien].Top + Aliens[ShootingAlien].Height, 'Grafiken/AlienLaser.png');
+          end;
+       end;
+  end;
 end;
 
 //Laser Timer
@@ -204,7 +240,6 @@ begin
             //Sound für Alien getroffen
           end;
   end;
-
 end;
 
 //Spieler Timer

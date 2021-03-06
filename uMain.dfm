@@ -19763,4 +19763,11 @@
     Left = 16
     Top = 136
   end
+  object tmrAlienLaser: TTimer
+    Enabled = False
+    Interval = 1
+    OnTimer = tmrAlienLaserTimer
+    Left = 16
+    Top = 200
+  end
 end
