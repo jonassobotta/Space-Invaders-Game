@@ -54,22 +54,7 @@ implementation
 
 {$R *.dfm}
 
-
-
-procedure TfrmMain.DeleteArrayElement(index: integer);
-begin
-  if index > High(Aliens) then Exit; //Ist der übergebene Index größer als der höchste Array index
-  if index < Low(Aliens) then Exit;  //Ist der übergebene Index kleiner als der niedrigste Array index
-  if index = High(Aliens) then //Höchstes element --> kein Move nötig
-  begin
-    SetLength(Aliens, Length(Aliens) - 1);
-    Exit;
-  end;
-  Finalize(Aliens[Index]);
-  System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
-  SetLength(Aliens, Length(Aliens) - 1);
-end;
-
+//Hauptmenü
 procedure TfrmMain.EinstellungenClick(Sender: TObject);
 begin
 showmessage('Kranke Sachen einstellen');
@@ -90,6 +75,21 @@ end;
 procedure TfrmMain.TutorialClick(Sender: TObject);
 begin
 showmessage('Wir zeigen euch wies geht');
+end;
+
+//Array Element löschen und Array kürzen
+procedure TfrmMain.DeleteArrayElement(index: integer);
+begin
+  if index > High(Aliens) then Exit; //Ist der übergebene Index größer als der höchste Array index
+  if index < Low(Aliens) then Exit;  //Ist der übergebene Index kleiner als der niedrigste Array index
+  if index = High(Aliens) then //Höchstes element --> kein Move nötig
+  begin
+    SetLength(Aliens, Length(Aliens) - 1);
+    Exit;
+  end;
+  Finalize(Aliens[Index]);
+  System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
+  SetLength(Aliens, Length(Aliens) - 1);
 end;
 
 //Initalisierung
@@ -126,13 +126,21 @@ begin
   tmrAliens.Enabled := true;
 end;
 
+//Alien Timer
 procedure TfrmMain.tmrAliensTimer(Sender: TObject);
 var
   i, j : Integer;
 begin
   //Aliens bewegen
-  if Length(Aliens) = 0 then tmrAliens.Enabled := false;
+  if Length(Aliens) = 0 then
+  begin
+    tmrAliens.Enabled := false;
+    //Siegsbildschirm einblenden
+    //...
+  end;
 
+  //Abfragen ob Spieler verloren hatt
+  //...
 
   for i := Low(Aliens) to High(Aliens) do
   begin
@@ -164,6 +172,7 @@ begin
 
 end;
 
+//Laser Timer
 procedure TfrmMain.tmrLaserTimer(Sender: TObject);
 var i : integer;
 begin
@@ -192,11 +201,13 @@ begin
             LaserKollision := True;
             Aliens[i].Free;
             DeleteArrayElement(i);
+            //Sound für Alien getroffen
           end;
   end;
 
 end;
 
+//Spieler Timer
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
 begin
   //Spieler bewegen
@@ -224,6 +235,7 @@ begin
     Player.SetBorderR(false);
 end;
 
+//Tasteneingabe
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
@@ -245,6 +257,7 @@ begin
       LaserAnz := LaserAnz + 1;
       LaserKollision := false;
       tmrLaser.Enabled := true;
+      //Hier kann Sound eingebaut werden
   end;
 end;
 
