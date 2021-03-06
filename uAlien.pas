@@ -5,133 +5,59 @@ interface
 uses Winapi.Windows, System.SysUtils, VCL.Forms, Vcl.ExtCtrls;
 
 type
-  TAlien = Class
+  TAlien = Class(TImage)
     private
-      iXpos, iYpos, iRichtung, iSpeed : integer;
-      strGFX : String;
-      imgBox : TImage;
-      bGetroffen : boolean;
-      const
-        iHeight = 64;
-        iWidth = 64;
+      Direction, Speed : integer;
+
     public
-      Constructor Create;
+      procedure Render(parent : TForm; Xpos, Ypos, width, height : integer; GfxPath : String);
 
-      procedure draw(parent : TForm);
-      procedure SetbGetroffen(bGetroffen : boolean);
-      procedure SetiXpos(iXpos : integer);
-      procedure SetiYpos(iYpos : integer);
-      procedure SetstrGFX(strGFX : String);
-      procedure SetiSpeed(iSpeed : integer);
-      procedure SetiRichtung(iRichtung : integer);
+      procedure SetDirection(direction : integer);
+      procedure SetSpeed(speed : integer);
 
-      function GetbGetroffen : boolean;
-      function GetiXpos : integer;
-      function GetiYpos : integer;
-      function GetiSpeed : integer;
-      function GetiRichtung : integer;
-      function GetiHeight : integer;
-      function GetiWidth : integer;
-      function GetimgBox : TImage;
+      function GetDirection : integer;
+      function GetSpeed : integer;
   End;
 
 implementation
 
 { TAlien }
 
-constructor TAlien.Create;
-begin
-  self.iXpos := 0;
-  self.iYpos := 0;
-  self.iSpeed := 1;
-  self.iRichtung := 1;
-  self.strGFX := 'Grafiken/AlienI.png';
-end;
-
-procedure TAlien.draw(parent: TForm);
-begin
-  self.imgBox := TImage.Create(parent);
-  self.imgBox.Left := self.iXpos;
-  self.imgBox.Top := self.iYpos;
-  self.imgBox.Width := iWidth;
-  self.imgBox.Height := iHeight;
-  self.imgBox.Visible := True;
-  self.imgBox.Parent := parent;
-  self.imgBox.Picture.LoadFromFile(self.strGFX);
-end;
-
 //Getter
-function TAlien.GetbGetroffen: boolean;
+function TAlien.GetDirection: integer;
 begin
-  result := self.bGetroffen;
+  result := self.Direction;
 end;
 
-function TAlien.GetiHeight: integer;
+function TAlien.GetSpeed: integer;
 begin
-  result := self.iHeight;
-end;
-
-function TAlien.GetimgBox: TImage;
-begin
- result := self.imgBox
-end;
-
-function TAlien.GetiWidth: integer;
-begin
-  result := self.iWidth;
-end;
-
-function TAlien.GetiRichtung: integer;
-begin
-  result := self.iRichtung;
-end;
-
-function TAlien.GetiSpeed: integer;
-begin
-  result := self.iSpeed;
-end;
-
-function TAlien.GetiXpos: integer;
-begin
-  result := self.iXpos;
-end;
-
-function TAlien.GetiYpos: integer;
-begin
-  result := self.iYpos;
+  result := self.Speed;
 end;
 
 //Setter
-procedure TAlien.SetbGetroffen(bGetroffen: boolean);
+procedure TAlien.SetDirection(direction: integer);
 begin
-  self.bGetroffen := bGetroffen;
+  self.Direction := direction
 end;
 
-procedure TAlien.SetiRichtung(iRichtung: integer);
+procedure TAlien.SetSpeed(speed: integer);
 begin
-  self.iRichtung := iRichtung;
+  self.Speed := speed;
 end;
 
-procedure TAlien.SetiSpeed(iSpeed: integer);
-begin
-  self.iSpeed := iSpeed;
-end;
+{ TAlien }
 
-procedure TAlien.SetiXpos(iXpos: integer);
+procedure TAlien.Render(parent : TForm; Xpos, Ypos: integer; width : integer; height : integer; GfxPath: String);
 begin
-  self.iXpos := iXpos;
-  self.imgBox.Left := self.iXpos;
-end;
-
-procedure TAlien.SetiYpos(iYpos: integer);
-begin
-  self.iYpos := iYpos;
-  self.imgBox.Top := self.iYpos;
-end;
-
-procedure TAlien.SetstrGFX(strGFX: String);
-begin
-  self.strGFX := strGFX;
+  self.Parent := parent;
+  self.Left := Xpos;
+  self.Top := Ypos;
+  self.Width := width;
+  self.Height := height;
+  self.Picture.LoadFromFile(GfxPath);
+  self.Visible := True;
+  self.Speed := 1;
+  self.Direction := 1;
 end;
 
 end.

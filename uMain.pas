@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.jpeg,
-  Vcl.StdCtrls, Vcl.Imaging.pngimage, uSpieler, uLaser, uAlien;
+  Vcl.StdCtrls, Vcl.Imaging.pngimage, uPlayer, uLaser, uAlien;
 
 type
   TfrmMain = class(TForm)
@@ -42,11 +42,11 @@ type
 var
   frmMain : TfrmMain;
 
-  Spieler : TSpieler;
+  Player : TPlayer;
 
   Laser : TLaser;
-  iLaserAnz : integer;
-  bLaserKollision : boolean;
+  LaserAnz : integer;
+  LaserKollision : boolean;
 
   Aliens : array of TAlien;
 
@@ -54,22 +54,7 @@ implementation
 
 {$R *.dfm}
 
-
-
-procedure TfrmMain.DeleteArrayElement(index: integer);
-begin
-  if index > High(Aliens) then Exit; //Ist der übergebene Index größer als der höchste Array index
-  if index < Low(Aliens) then Exit;  //Ist der übergebene Index kleiner als der niedrigste Array index
-  if index = High(Aliens) then //Höchstes element --> kein Move nötig
-  begin
-    SetLength(Aliens, Length(Aliens) - 1);
-    Exit;
-  end;
-  Finalize(Aliens[Index]);
-  System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
-  SetLength(Aliens, Length(Aliens) - 1);
-end;
-
+//Hauptmenü
 procedure TfrmMain.EinstellungenClick(Sender: TObject);
 begin
 showmessage('Kranke Sachen einstellen');
@@ -92,164 +77,187 @@ begin
 showmessage('Wir zeigen euch wies geht');
 end;
 
+//Array Element löschen und Array kürzen
+procedure TfrmMain.DeleteArrayElement(index: integer);
+begin
+  if index > High(Aliens) then Exit; //Ist der übergebene Index größer als der höchste Array index
+  if index < Low(Aliens) then Exit;  //Ist der übergebene Index kleiner als der niedrigste Array index
+  if index = High(Aliens) then //Höchstes element --> kein Move nötig
+  begin
+    SetLength(Aliens, Length(Aliens) - 1);
+    Exit;
+  end;
+  Finalize(Aliens[Index]);
+  System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
+  SetLength(Aliens, Length(Aliens) - 1);
+end;
+
 //Initalisierung
 procedure TfrmMain.INIT;
-var i, iAlienPosX, iAlienPosY: integer;
+var i, AlienPosX, AlienPosY: integer;
 begin
   //Spieler
-  Spieler := TSpieler.Create;
-  Spieler.draw(frmMain);
+  Player := TPlayer.Create(frmMain);
+  Player.Render(frmMain, 425, 500, 96, 96, 'Grafiken/Player.png');
   tmrSpieler.Enabled := true;
 
   //Laser
-  Laser := TLaser.Create;
-  Laser.draw(frmMain);
-  iLaserAnz := 0;
+  LaserAnz := 0;
 
   //Aliens
-  iAlienPosX := 40;
-  iAlienPOsY := 10;
+  AlienPosX := 40;
+  AlienPOsY := 10;
   SetLength(Aliens, 20);
 
   //Aliens auf Bildschirm rendern
   for i := Low(Aliens) to High(Aliens) do
   begin
-      Aliens[i] := TAlien.Create;
-      Aliens[i].draw(frmMain);
-      Aliens[i].SetiXpos(iAlienPosX);
-      Aliens[i].SetiYpos(iAlienPosY);
-      iAlienPosX := iALienPosX + 84;
+      Aliens[i] := TAlien.Create(frmMain);
+      Aliens[i].Render(frmMain, AlienPosX, AlienPosY, 64, 64, 'Grafiken/Alien1.png');
+      AlienPosX := ALienPosX + 84;
 
-      if Aliens[i].GetimgBox.Left + Aliens[i].GetiWidth >= 810 then
+      if Aliens[i].Left + Aliens[i].Width >= 810 then
       begin
-        iAlienPosY := iAlienPosY + 74;
-        iAlienPosX := 40;
+        AlienPosY := AlienPosY + 74;
+        AlienPosX := 40;
       end;
   end;
 
   tmrAliens.Enabled := true;
 end;
 
+//Alien Timer
 procedure TfrmMain.tmrAliensTimer(Sender: TObject);
 var
   i, j : Integer;
 begin
   //Aliens bewegen
-  if Length(Aliens) = 0 then tmrAliens.Enabled := false;
+  if Length(Aliens) = 0 then
+  begin
+    tmrAliens.Enabled := false;
+    //Siegsbildschirm einblenden
+    //...
+  end;
+
+  //Abfragen ob Spieler verloren hatt
+  //...
 
   for i := Low(Aliens) to High(Aliens) do
   begin
-    if Length(Aliens) = 10 then Aliens[i].SetiSpeed(3);
-    if length(Aliens) = 5  then Aliens[i].SetiSpeed(5);
-    if Length(Aliens) = 1  then Aliens[i].SetiSpeed(7);
-    
-    if Aliens[i].GetiXpos <= 0 then
+    if Length(Aliens) = 10 then Aliens[i].SetSpeed(3);
+    if length(Aliens) = 5  then Aliens[i].SetSpeed(5);
+    if Length(Aliens) = 1  then Aliens[i].SetSpeed(7);
+
+    if Aliens[i].Left <= 0 then
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].SetiYpos(Aliens[j].GetiYpos + 10);
-          Aliens[j].SetiRichtung(1);
+          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].SetDirection(1);
         end;
       end;
-    if Aliens[i].GetiXpos + Aliens[i].GetiWidth >= 900 then
+    if Aliens[i].Left + Aliens[i].Width >= 900 then
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].SetiYpos(Aliens[j].GetiYpos + 10);
-          Aliens[j].SetiRichtung(-1);
+          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].SetDirection(-1);
         end;
     end;
   end;
 
 
   for i := Low(Aliens) to High(Aliens) do
-    Aliens[i].SetiXpos(Aliens[i].GetiXpos + Aliens[i].GetiSpeed * Aliens[i].GetiRichtung);
+    Aliens[i].Left := Aliens[i].Left + Aliens[i].GetSpeed * Aliens[i].GetDirection;
 
 end;
 
+//Laser Timer
 procedure TfrmMain.tmrLaserTimer(Sender: TObject);
 var i : integer;
 begin
 
   //Laser bewegen
-  Laser.SetiYpos(Laser.GetiYpos - Laser.GetiSpeed);
+  Laser.Top := Laser.Top - Laser.GetSpeed;
 
   //Kollisionsabfragen
-  if bLaserKollision then
+  if LaserKollision then
   begin
-    iLaserAnz := 0;
-    Laser.SetiXpos(-20);
-    Laser.SetiYpos(-20);
+    LaserAnz := 0;
     tmrLaser.Enabled := false;
+    Laser.Free;
   end;
 
   //Laser trifft bildschirmrand
-  if Laser.GetiYpos <= 0then
-    bLaserKollision := true;
+  if Laser.Top <= 0then
+    LaserKollision := true;
 
   //Laser trifft Alien
   for i := Low(Aliens) to High(Aliens) do
   begin
-      if (Laser.GetiYpos <= Aliens[i].GetiYpos) and ((Laser.GetiXpos >= Aliens[i].GetiXpos) and
-         (Laser.GetiXpos + Laser.GetiWidth <= Aliens[i].GetiXpos + Aliens[i].GetiWidth)) and (Aliens[i].GetbGetroffen = false) then
+      if (Laser.Top <= Aliens[i].Top) and ((Laser.Left >= Aliens[i].Left) and
+         (Laser.Left + Laser.width <= Aliens[i].Left + Aliens[i].Width)) then
           begin
-            iLaserAnz := 0;
-            Laser.SetiXpos(-20);
-            Laser.SetiYpos(-20);
-            tmrLaser.Enabled := false;
-            Aliens[i].GetimgBox.Destroy;
-            Aliens[i].Destroy;
+            LaserKollision := True;
+            Aliens[i].Free;
             DeleteArrayElement(i);
+            //Sound für Alien getroffen
           end;
   end;
 
 end;
 
+//Spieler Timer
 procedure TfrmMain.tmrSpielerTimer(Sender: TObject);
 begin
   //Spieler bewegen
-  if Spieler.GetbMovingL = true then
-    Spieler.SetiXpos(Spieler.GetiXpos - Spieler.GetiSpeed);
+  if Player.GetMovingL = true then
+    Player.Left := Player.Left - Player.GetSpeed;
 
-  if Spieler.GetbMovingR = true then
-    Spieler.SetiXpos(Spieler.GetiXpos + Spieler.GetiSpeed);
+  if Player.GetMovingR = true then
+    Player.Left := Player.Left + Player.GetSpeed;
 
   //Überprüfen, ob Spieler an den Bildschirmrand stößt
-  if Spieler.GetiXpos <= 0 then
+  if PLayer.Left <= 0 then
   begin
-    Spieler.SetiXpos(0);
-    Spieler.SetbMovingL(false);
+    Player.Left := 0;
+    Player.SetMovingL(false);
   end
-  else if Spieler.GetiXpos > 0 then
-    Spieler.SetbBorderL(false);
+  else if Player.Left > 0 then
+    Player.SetBorderL(false);
 
-  if Spieler.GetiXpos >= 810 then
+  if Player.Left >= 810 then
   begin
-    Spieler.SetiXpos(810);
-    Spieler.SetbMovingR(false);
+    Player.Left := 810;
+    Player.SetMovingR(false);
   end
-  else if Spieler.GetiXpos > 810 then
-    Spieler.SetbBorderR(false);
+  else if Player.Left > 810 then
+    Player.SetBorderR(false);
 end;
 
+//Tasteneingabe
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
+var
+  LaserHeight: integer;
 begin
-//Bewegung
-  if (Key = vk_Left) and (Spieler.GetbBorderL = false) then
-    Spieler.SetbMovingL(true);
+  //Spieler Bewegung
+  if (Key = vk_Left) and (player.GetBorderL = false) then
+    Player.SetMovingL(true);
 
-  if (Key = vk_Right) and (Spieler.GetbBorderR = false) then
-    Spieler.SetbMovingR(true);
+  if (Key = vk_Right) and (Player.GetBorderR = false) then
+    Player.SetMovingR(true);
 
   //Laser
-  if (Key = vk_Space) and (iLaserANz = 0) then
+  LaserHeight := 30;
+  if (Key = vk_Space) and (LaserAnz = 0) then
   begin
-      Laser.SetiXpos(Round(Spieler.GetiXpos + Spieler.GetiWidth / 2));
-      Laser.SetiYpos(Spieler.GetiYpos - Laser.GetiHeight);
-      iLaserAnz := iLaserAnz + 1;
-      bLaserKollision := false;
+      Laser := TLaser.Create(frmMain);
+      Laser.Render(frmMain, Player.Left + Round(Player.Width/2), (Player.Top - LaserHeight), 'Grafiken/Laser.png');
+      LaserAnz := LaserAnz + 1;
+      LaserKollision := false;
       tmrLaser.Enabled := true;
+      //Hier kann Sound eingebaut werden
   end;
 end;
 
@@ -257,10 +265,10 @@ procedure TfrmMain.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState)
 begin
 //Bewegung
   if Key = vk_Left then
-    Spieler.SetbMovingL(false);
+    Player.SetMovingL(false);
 
   if Key = vk_Right then
-    Spieler.SetbMovingR(false);
+    Player.SetMovingR(false);
 end;
 
 
