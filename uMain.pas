@@ -129,7 +129,7 @@ begin
       end;
   end;
 
-  //tmrAliens.Enabled := true;
+  tmrAliens.Enabled := true;
   tmrAlienLaser.Enabled := true;
 end;
 
@@ -148,6 +148,7 @@ begin
 
   //Abfragen ob Spieler verloren hatt
   //...
+  //
 
   for i := Low(Aliens) to High(Aliens) do
   begin
