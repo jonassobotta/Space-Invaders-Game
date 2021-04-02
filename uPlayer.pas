@@ -42,7 +42,7 @@ begin
   self.Picture.LoadFromFile(GfxPath);
   self.Visible := true;
   self.speed := 6;
-  self.lives := 3;
+  self.lives := 100;
 end;
 
 //Getter

@@ -31,7 +31,6 @@ begin
   self.Top := Ypos;
   self.Picture.LoadFromFile(GfxPath);
   self.Visible := True;
-  self.speed := 12;
 end;
 
 function TLaser.GetSpeed: integer;

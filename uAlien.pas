@@ -17,6 +17,7 @@ type
 
       function GetDirection : integer;
       function GetSpeed : integer;
+      function GetXpos : integer;
   End;
 
 implementation
@@ -32,6 +33,11 @@ end;
 function TAlien.GetSpeed: integer;
 begin
   result := self.Speed;
+end;
+
+function TAlien.GetXpos: integer;
+begin
+  result := self.Left;
 end;
 
 //Setter
