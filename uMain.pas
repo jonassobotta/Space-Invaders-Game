@@ -22,11 +22,11 @@ type
     tmrLaser: TTimer;
     tmrAliens: TTimer;
     tmrAlienLaser: TTimer;
-    gewonnen: TPanel;
+    panelWon: TPanel;
     btnNextLevel: TButton;
     lblLevel: TLabel;
     lblScore: TLabel;
-    Shop: TButton;
+    btnShop: TButton;
     panelShop: TPanel;
     btnSpeedUpgrade: TButton;
     btnLaserUpgrade: TButton;
@@ -37,6 +37,22 @@ type
     lblLaserUpgrade: TLabel;
     lblShopCoins: TLabel;
     lblHealth: TLabel;
+    panelLost: TPanel;
+    YouLoose: TImage;
+    YouLooseBackground: TImage;
+    TryAgain: TImage;
+    BackToMenu: TImage;
+    RageQuit: TImage;
+    YouWinBackground: TImage;
+    YouWin: TImage;
+    NextLevel: TImage;
+    Back: TImage;
+    Shop: TImage;
+    Quit: TImage;
+    ShopBackground: TImage;
+    Engine: TImage;
+    imgLaser: TImage;
+    heart: TImage;
 
     procedure INIT(level : integer);
     procedure startenClick(Sender: TObject);
@@ -51,11 +67,12 @@ type
     procedure tmrAlienLaserTimer(Sender: TObject);
     procedure btnNextLevelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure ShopClick(Sender: TObject);
+    procedure btnShopClick(Sender: TObject);
     procedure btnSpeedUpgradeClick(Sender: TObject);
     procedure btnShopExitClick(Sender: TObject);
     procedure btnLaserUpgradeClick(Sender: TObject);
     procedure btnHealthUpgradeClick(Sender: TObject);
+
   private
     { Private-Deklarationen }
   public
@@ -105,7 +122,7 @@ end;
 procedure TfrmMain.btnNextLevelClick(Sender: TObject);
 begin
   SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
-  gewonnen.Visible := false;
+  panelWon.Visible := false;
   CurrentLevel := CurrentLevel + 1;
   if CurrentLevel = 4 then
   begin
@@ -117,11 +134,11 @@ begin
 end;
 
 //Shop öffnen
-procedure TfrmMain.ShopClick(Sender: TObject);
+procedure TfrmMain.btnShopClick(Sender: TObject);
 begin
   SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
   panelShop.Visible := true;
-  gewonnen.Visible := false;
+  panelWon.Visible := false;
   lblShopCoins.Caption := IntToStr(Coins);
   lblSpeedUpgrade.Caption := IntToStr(1000 * SpeedUpgrade);
   lblLaserUpgrade.Caption := IntToStr(1000 * LaserUpgrade);
@@ -133,7 +150,7 @@ procedure TfrmMain.btnShopExitClick(Sender: TObject);
 begin
   SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
   panelShop.Visible := false;
-  gewonnen.Visible := true;
+  panelWon.Visible := true;
 end;
 
 //Speed Upgrade
@@ -142,7 +159,7 @@ begin
   SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
   if Coins >= 1000 * SpeedUpgrade then
   begin
-    Coins := Coins - 1000;
+    Coins := Coins - 1000 * SpeedUpgrade;
     Player.SetSpeed(Player.GetSpeed + 3);
     ShowMessage('Speed Upgraded!');
     SpeedUpgrade := SpeedUpgrade + 1;
@@ -159,7 +176,7 @@ begin
   SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
   if Coins >= 1000 * LaserUpgrade then
   begin
-    Coins := Coins - 1000;
+    Coins := Coins - 1000 * LaserUpgrade;
     Laser.SetSpeed(Laser.GetSpeed + 1);
     ShowMessage('Laser Upgraded!');
     LaserUpgrade := LaserUpgrade + 1;
@@ -176,7 +193,7 @@ begin
 SndPlaySound(Pchar('Sounds\ButtonClick.wav'), SND_ASync )  ;
 if Coins >= 1000 * HealthUpgrade then
   begin
-    Coins := Coins - 1000;
+    Coins := Coins - 1000 * HealthUpgrade;
     Player.SetLives(Player.GetLives + 50);
     ShowMessage('Health Upgraded!');
     HealthUpgrade := HealthUpgrade + 1;
@@ -199,7 +216,6 @@ begin
     SetLength(Aliens, Length(Aliens) - 1);
     Exit;
   end;
-  //Finalize(Aliens[Index]);
   System.Move(Aliens[Index +1], Aliens[Index],(Length(Aliens) - Index -1) * SizeOf(string) + 1);
   SetLength(Aliens, Length(Aliens) - 1);
 end;
@@ -300,20 +316,28 @@ begin
     tmrAlienLaser.Enabled := false;
     for i := Low(AlienLaser) to High(ALienLaser) do
       ALienLaser[i].free;
-    gewonnen.Visible := true;
+    panelWon.Visible := true;
   end;
 
   for i := Low(Aliens) to High(Aliens) do
   begin
-    {if Length(Aliens) = 10 then Aliens[i].SetSpeed(3);
     if length(Aliens) = 5  then Aliens[i].SetSpeed(5);
-    if Length(Aliens) = 1  then Aliens[i].SetSpeed(7);}
+    if Length(Aliens) = 1  then Aliens[i].SetSpeed(7);
+    if Aliens[i].Top >= 550 then
+    begin
+      panelLost.visible := true;
+
+      for j := Low(AlienLaser) to High(AlienLaser) do AlienLaser[i].Free;
+
+      tmrAlienLaser.Enabled := false;
+      tmrAliens.Enabled := false;
+    end;
 
     if Aliens[i].Left <= 0 then
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].Top := (Aliens[j].Top + 15);
           Aliens[j].SetDirection(1);
         end;
       end;
@@ -321,7 +345,7 @@ begin
       begin
         for j := Low(Aliens) to High(Aliens) do
         begin
-          Aliens[j].Top := (Aliens[j].Top + 10);
+          Aliens[j].Top := (Aliens[j].Top + 30);
           Aliens[j].SetDirection(-1);
         end;
     end;
